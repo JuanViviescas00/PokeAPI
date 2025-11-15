@@ -44,10 +44,14 @@
     <script>
         let numaleatorio = Math.floor(Math.random() * 1025) + 1;
         
-        async function buscar() {
+        async function buscar(iniciapokemon = null) {
             const pokemonInput = document.getElementById("poke").value.toLowerCase();
+            const pokeid = iniciapokemon || document.getElementById("poke").value.toLowerCase();
+            if (!pokeid) {
+                return;
+            }
 
-            const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonInput}`);
+            const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokeid}`);
             const pok = res.data;
             const tipos = pok.types;
             const primerTipo = tipos[0].type.name;
@@ -127,6 +131,7 @@
             document.getElementById("speed").innerHTML = `<h3>Velocidad: ${speed}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(speed / 255) * 100}%"></div></div>`;
 
         }
+       buscar(numaleatorio);
     </script>
 </body>
  
