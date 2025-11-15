@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeAPI</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div id="buscar">
+        <input id="poke" type="text" placeholder="Escriba el nombre o numero de pokemon">
+        <button onclick="buscar()">Buscar</button>
+    </div>
+    <div class="pokedex-container">
+        <div class="screen">
+            <div id="one">
+                <h1 id="nombre"></h1>
+                <h3 id="numero"></h3>
+                <div id="fondo">
+                    <img id="img" alt="">
+                    <div id="altura"></div>
+                    <div id="peso"></div>
+                </div>
+                <div>
+                    <div id="types"></div>
+                </div>
+                <div id="debil"></div>
+                <div id="fort"></div>
+            </div>
+
+            <div id="two">
+
+                <div id="hp"></div>
+                <div id="attack"></div>
+                <div id="defense"></div>
+                <div id="speed"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        let numaleatorio = Math.floor(Math.random() * 1025) + 1;
+        
+        async function buscar() {
+            const pokemonInput = document.getElementById("poke").value.toLowerCase();
+
+            const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonInput}`);
+            const pok = res.data;
+            const tipos = pok.types;
+            const primerTipo = tipos[0].type.name;
+            const debilidadesRes = await axios.get(`https://pokeapi.co/api/v2/type/${primerTipo}/`);
+            const debil = debilidadesRes.data.damage_relations.double_damage_from;
+
+
+            let htmltipos = "";
+            tipos.forEach(item => {
+                const nombretipo = item.type.name;
+                htmltipos += `<button class="${nombretipo}">${nombretipo}</button>`;
+            });
+
+            let htmldebil = "";
+            debil.forEach(debilidad => {
+                const nombreDebilidad = debilidad.name;
+                htmldebil += `<button class="${nombreDebilidad}">${nombreDebilidad}</button>`;
+            });
+
+            let htmlfotalezas = "";
+            let fortalezas = debilidadesRes.data.damage_relations.double_damage_to;
+            fortalezas.forEach(fortaleza => {
+                const nombreFortaleza = fortaleza.name;
+                htmlfotalezas += `<button class="${nombreFortaleza}">${nombreFortaleza}</button>`;
+            });
+
+            const TIPO_COLORES = {
+                normal: '#A8A878',
+                fire: '#F08030',
+                water: '#6890F0',
+                grass: '#78C850',
+                electric: '#F8D030',
+                ice: '#98D8D8',
+                fighting: '#C03028',
+                poison: '#A040A0',
+                ground: '#E0C068',
+                flying: '#A890F0',
+                psychic: '#F85888',
+                bug: '#A8B820',
+                rock: '#B8A038',
+                ghost: '#705898',
+                dragon: '#7038F8',
+                steel: '#B8B8D0', 
+                fairy: '#EE99AC', 
+                dark: '#705848' 
+            };
+            let gradientStyle = '';
+            if (tipos.length === 1) {
+                // Si solo tiene un tipo, el fondo es un color sólido
+                const color1 = TIPO_COLORES[tipos[0].type.name] || '#FFFFFF'; // Color por defecto si no se encuentra
+                gradientStyle = `background-color: ${color1};`;
+            } else if (tipos.length >= 2) {
+                // Si tiene dos o más tipos, creamos el degradado
+                const color1 = TIPO_COLORES[tipos[0].type.name] || '#CCCCCC';
+                const color2 = TIPO_COLORES[tipos[1].type.name] || '#FFFFFF';
+                // Crea un degradado linear de 90 grados (de izquierda a derecha)
+                gradientStyle = `background: linear-gradient(90deg, ${color1} 0%, ${color2} 100%);`;
+            }
+            document.getElementById("fondo").style.cssText = gradientStyle;// Aplicar el estilo al elemento 'fondo'
+
+            document.getElementById("peso").innerHTML = `<h3>Peso: ${pok.weight / 10} kg</h3>`;
+            document.getElementById("altura").innerHTML = `<h3>Altura: ${pok.height / 10} m</h3>`;
+            document.getElementById("fort").innerHTML = `<h2>Fortalezas</h2><p>Basado en el tipo: <b>${primerTipo.toUpperCase()}</b></p> ${htmlfotalezas}`;
+            document.getElementById("nombre").textContent = pok.name.toUpperCase();
+            document.getElementById("numero").textContent = `# ${pok.id}`;
+            document.getElementById("img").src = pok.sprites.other["official-artwork"]["front_default"];
+            document.getElementById("types").innerHTML = `<h2>Tipos</h2> ${htmltipos}`;
+            document.getElementById("debil").innerHTML = `<h2>Debilidades</h2><p>Basado en el tipo: <b>${primerTipo.toUpperCase()}</b></p> ${htmldebil}`;
+
+            let hp =  pok.stats[0].base_stat;
+            let attack = pok.stats[1].base_stat;
+            let defense = pok.stats[2].base_stat;
+            let speed = pok.stats[5].base_stat;
+            document.getElementById("hp").innerHTML = `<h3>HP: ${hp}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(hp / 255) * 100}%"></div></div>`;
+            document.getElementById("attack").innerHTML = `<h3>Ataque: ${attack}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(attack / 255) * 100}%"></div></div>`;
+            document.getElementById("defense").innerHTML = `<h3>Defensa: ${defense}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(defense / 255) * 100}%"></div></div>`;
+            document.getElementById("speed").innerHTML = `<h3>Velocidad: ${speed}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(speed / 255) * 100}%"></div></div>`;
+
+        }
+    </script>
+</body>
+ 
+</html>

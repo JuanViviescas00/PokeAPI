@@ -1,0 +1,3 @@
+- [x] Wrap main content in index.html with 'pokedex-container' div
+- [x] Enhance index.css with retro Pokédex styles: background, screen effects, pixelated look
+- [x] Adjust layout for better structure and responsiveness
