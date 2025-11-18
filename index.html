@@ -9,6 +9,10 @@
 </head>
 
 <body>
+    <div id="header">
+        <img src="logo.png" alt="Pokémon Logo" id="logo">
+        <img src="pokeball.png" alt="Pokeball" id="pokeball">
+    </div>
     <div id="buscar">
         <input id="poke" type="text" placeholder="Escriba el nombre o numero de pokemon">
         <button onclick="buscar()">Buscar</button>
@@ -31,6 +35,7 @@
                 <div id="types"></div>
                 <div id="debil"></div>
                 <div id="fort"></div>
+                <div id="ability"></div>
             </div>
 
             <div class="section stats-section">
@@ -39,6 +44,8 @@
                 <div id="attack"></div>
                 <div id="defense"></div>
                 <div id="speed"></div>
+                <div id="special-attack"></div>
+                <div id="special-defense"></div>
             </div>
         </div>
     </div>
@@ -111,28 +118,40 @@
                 const color1 = TIPO_COLORES[tipos[0].type.name] || '#CCCCCC';
                 const color2 = TIPO_COLORES[tipos[1].type.name] || '#FFFFFF';
                 // Crea un degradado linear de 90 grados (de izquierda a derecha)
-                gradientStyle = `background: linear-gradient(90deg, ${color1} 0%, ${color2} 100%);`;
+                gradientStyle = `background: linear-gradient(90deg, ${color1} 10%, ${color2} 100%);`;
             }
             document.getElementById("fondo").style.cssText = gradientStyle;// Aplicar el estilo al elemento 'fondo'
+           
+            let habilidades = pok.abilities.slice(); // Tomar las primeras 10 habilidades
+            let htmlHabilidades = "<h2>Habilidades</h2>";
+            habilidades.forEach(habilidad => {
+                htmlHabilidades += `<button class="habilidad">${habilidad.ability.name.toUpperCase()}</button>`;
+            });
+            document.getElementById("ability").innerHTML = htmlHabilidades;
 
-            document.getElementById("peso").innerHTML = `<h3>Peso: ${pok.weight / 10} kg</h3>`;
-            document.getElementById("altura").innerHTML = `<h3>Altura: ${pok.height / 10} m</h3>`;
-            document.getElementById("fort").innerHTML = `<h2>Fortalezas</h2><p>Basado en el tipo: <b>${primerTipo.toUpperCase()}</b></p> ${htmlfotalezas}`;
+            let primer = htmltipos;
+
+            document.getElementById("peso").innerHTML = `<h3>Peso: <br> ${pok.weight / 10} kg</h3>`;
+            document.getElementById("altura").innerHTML = `<h3>Altura: <br> ${pok.height / 10} m</h3>`;
+            document.getElementById("fort").innerHTML = `<h2>Fortalezas</h2><p>Basado en el tipo: <button class="${primerTipo}">${primerTipo.toUpperCase()}</button></p> ${htmlfotalezas}`;
             document.getElementById("nombre").textContent = pok.name.toUpperCase();
             document.getElementById("numero").textContent = `# ${pok.id}`;
             document.getElementById("img").src = pok.sprites.other["official-artwork"]["front_default"];
             document.getElementById("types").innerHTML = `<h2>Tipos</h2> ${htmltipos}`;
-            document.getElementById("debil").innerHTML = `<h2>Debilidades</h2><p>Basado en el tipo: <b>${primerTipo.toUpperCase()}</b></p> ${htmldebil}`;
+            document.getElementById("debil").innerHTML = `<h2>Debilidades</h2><p>Basado en el tipo: <button class="${primerTipo}">${primerTipo.toUpperCase()}</button></p> ${htmldebil}`;
 
             let hp =  pok.stats[0].base_stat;
             let attack = pok.stats[1].base_stat;
             let defense = pok.stats[2].base_stat;
+            let special_attack= pok.stats[3].base_stat;
+            let special_defense = pok.stats[4].base_stat;
             let speed = pok.stats[5].base_stat;
-            document.getElementById("hp").innerHTML = `<h3>HP: ${hp}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(hp / 255) * 100}%"></div></div>`;
-            document.getElementById("attack").innerHTML = `<h3>Ataque: ${attack}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(attack / 255) * 100}%"></div></div>`;
-            document.getElementById("defense").innerHTML = `<h3>Defensa: ${defense}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(defense / 255) * 100}%"></div></div>`;
-            document.getElementById("speed").innerHTML = `<h3>Velocidad: ${speed}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(speed / 255) * 100}%"></div></div>`;
-
+            document.getElementById("hp").innerHTML = `<h3>HP: ${hp}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(hp / 255) * 100}%; background: ${gradientStyle.replace('background:', '').replace('background-color:', '')}"></div></div>`;
+            document.getElementById("attack").innerHTML = `<h3>Ataque: ${attack}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(attack / 255) * 100}%; background: ${gradientStyle.replace('background:', '').replace('background-color:', '')}"></div></div>`;
+            document.getElementById("defense").innerHTML = `<h3>Defensa: ${defense}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(defense / 255) * 100}%; background: ${gradientStyle.replace('background:', '').replace('background-color:', '')}"></div></div>`;
+            document.getElementById("speed").innerHTML = `<h3>Velocidad: ${speed}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(speed / 255) * 100}%; background: ${gradientStyle.replace('background:', '').replace('background-color:', '')}"></div></div>`;
+            document.getElementById("special-attack").innerHTML = `<h3>Ataque Especial: ${special_attack}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(special_attack / 255) * 100}%; background: ${gradientStyle.replace('background:', '').replace('background-color:', '')}"></div></div>`;
+            document.getElementById("special-defense").innerHTML = `<h3>Defensa Especial: ${special_defense}</h3><div class="stat-bar"><div class="stat-fill" style="width: ${(special_defense / 255) * 100}%; background: ${gradientStyle.replace('background:', '').replace('background-color:', '')}"></div></div>`;
         }
        buscar(numaleatorio);
     </script>
