@@ -14,24 +14,27 @@
         <button onclick="buscar()">Buscar</button>
     </div>
     <div class="pokedex-container">
-        <div class="screen">
-            <div id="one">
+        <div class="pokedex-sections">
+            <div class="section info-section">
                 <h1 id="nombre"></h1>
                 <h3 id="numero"></h3>
                 <div id="fondo">
                     <img id="img" alt="">
+                </div>
+                <div class="medidas">
                     <div id="altura"></div>
                     <div id="peso"></div>
                 </div>
-                <div>
-                    <div id="types"></div>
-                </div>
+            </div>
+
+            <div class="section types-section">
+                <div id="types"></div>
                 <div id="debil"></div>
                 <div id="fort"></div>
             </div>
 
-            <div id="two">
-
+            <div class="section stats-section">
+                <h2>Estadísticas</h2>
                 <div id="hp"></div>
                 <div id="attack"></div>
                 <div id="defense"></div>
